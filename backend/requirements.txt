@@ -1,0 +1,13 @@
+flask
+wekzeug
+flask_cors
+nltk
+requests
+google-generativeai
+torch
+torch
+pillow
+joblib
+pandas
+numpy
+scikit-learn
