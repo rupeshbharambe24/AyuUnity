@@ -2,12 +2,11 @@ from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 import os
 from flask_cors import CORS 
-from utils.model_loader import load_model, predict_image, load_symptom_models, clean_symptom_text
+from utils.model_loader import load_model, predict_image, load_symptom_models, clean_symptom_text, load_risk_models, calculate_risk_level
 from utils.gemini_integration import get_medical_suggestions, get_disease_info
 import joblib
 import pandas as pd
 from flask import request, jsonify
-from utils.model_loader import load_risk_models, calculate_risk_level
 import re
 import nltk
 nltk.download('stopwords')
