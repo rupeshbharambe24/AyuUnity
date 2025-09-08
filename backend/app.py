@@ -2,8 +2,8 @@ from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 import os
 from flask_cors import CORS 
-from utils.model_loader import load_model, predict_image
-from utils.gemini_integration import get_medical_suggestions
+from utils.model_loader import load_model, predict_image, load_symptom_models, clean_symptom_text
+from utils.gemini_integration import get_medical_suggestions, get_disease_info
 import joblib
 import pandas as pd
 from flask import request, jsonify
@@ -16,8 +16,6 @@ nltk.download('punkt')
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import google.generativeai as genai
-from utils.model_loader import load_symptom_models, clean_symptom_text
-from utils.gemini_integration import get_disease_info
 import json
 import re
 
