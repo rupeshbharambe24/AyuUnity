@@ -1,83 +1,97 @@
-# 🌐 AyuUnity - Full Stack Web Application for Smart Health Integration
+# AyuUnity
 
-**AyuUnity** is an innovative, full-stack health-tech platform built using **React (frontend)** and **Flask (backend)**, designed to unify smart AI-based health services under one roof. The platform supports secure patient-doctor interactions, health data management, emergency assistance, and government scheme integration, making healthcare more accessible, intelligent, and efficient.
+A full-stack health-tech web application that combines medical-image analysis, chronic-disease risk prediction, symptom checking, and an LLM-backed assistant in a single dashboard. Built with **Next.js (frontend)** and **Flask (backend)**.
 
----
+## What it does
 
-## 🚀 Key Features
+The Flask backend exposes three core ML endpoints:
 
-### 🔧 Backend (Flask)
-- User Registration & Login with JWT tokens  
-- Role-based access control (patients, doctors, admins)  
-- Health report uploads and access  
-- Emergency API trigger to notify hospitals and family  
-- Modular API routes with clear separation of logic  
-- Cross-origin configuration for frontend integration  
+| Endpoint | Task | Model |
+|----------|------|-------|
+| `POST /analyze/<scan_type>` | Medical image classification (e.g. brain tumor, skin lesion) | PyTorch CNN — `BrainTumorCNN` (4 classes), `SkinLesionCNN` (2 classes) |
+| `POST /predict-chronic-risk` | Diabetes + multi-disease chronic-risk scoring from a form input | scikit-learn classifiers (`chronic_model.pkl`, `chronic_multi_model.pkl`) |
+| `POST /check-symptoms` | Disease prediction from free-text symptoms | TF-IDF + Random Forest (`s2d_*.pkl`), with Gemini for follow-up suggestions |
 
-### 🎨 Frontend (React + Vite)
-- Elegant dark/light themed UI with animated elements  
-- Role-specific dashboards (AyuAI, AyuCare, AyuSOS, etc.)  
-- Chatbot popup (AyuBot) with floating interaction  
-- Aadhar + OTP-based login simulation  
-- Multi-tab system: Appointments, Reports, Prescriptions, Consultations  
-- Emergency button that transmits medical history instantly  
+Gemini is used for medical suggestions and disease info on top of the model outputs.
 
----
+## Frontend pages
 
-## 💻 Installation
+- `/` — landing
+- `/login`, `/register-patient`
+- `/patient-dashboard`, `/doctor-dashboard` — role-specific dashboards
+- `/scan-analysis` — image upload + result display
+- Components for chronic-risk form, symptom checker, prescription list, government schemes, video consultation, emergency button, chatbot
 
-### 📦 Prerequisites
-- Node.js (v16+)
-- Python (v3.8+)
+## Tech Stack
 
----
+- **Frontend:** Next.js, React, TypeScript, Tailwind CSS, shadcn/ui (Radix primitives)
+- **Backend:** Flask, Flask-CORS
+- **ML:** PyTorch (image classification), scikit-learn (tabular + text), TF-IDF
+- **NLP:** NLTK preprocessing (stopwords, lemmatizer)
+- **LLM:** Google Gemini (`google-generativeai`) for medical suggestions
 
-### 🔙 Backend Setup
+## Project Structure
+
+```
+AyuUnity/
+├── backend/
+│   ├── app.py                      # Flask routes for all 3 endpoints
+│   ├── utils/
+│   │   ├── model_loader.py         # PyTorch CNNs + sklearn loaders
+│   │   └── gemini_integration.py   # Gemini wrapper
+│   ├── models/                     # Trained .pth and .pkl models
+│   ├── uploads/                    # Runtime upload folder
+│   ├── requirements.txt
+│   └── .env.example
+└── frontend/
+    ├── app/                        # Next.js App Router pages
+    ├── components/                 # Domain components + shadcn UI
+    ├── public/, styles/, lib/, hooks/
+    └── package.json
+```
+
+## Setup
+
+### Backend
 
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
+source venv/bin/activate          # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-```
 
-Create a .env file in /backend/ with the following:
-```
-SECRET_KEY=your_secret_key
+cp .env.example .env
+# Set GEMINI_API_KEY
 
-```
-Run the backend server:
-```
 python app.py
-
 ```
 
-Backend URL: http://localhost:5000
+Backend runs at `http://localhost:5000`.
 
-🔜 Frontend Setup
+### Frontend
+
 ```bash
 cd frontend
-npm install
+npm install                       # or pnpm install
 npm run dev
 ```
 
-Frontend URL: http://localhost:3000
+Frontend runs at `http://localhost:3000`.
 
-🔗 API Endpoints (Sample)
-Method	Endpoint	Description
-POST	/api/auth/register	Register a new user
-POST	/api/auth/login	Login with credentials
-GET	/api/user/profile	Fetch logged-in user's profile
-POST	/api/posts	Create content/post
-GET	/api/posts	Fetch all content
+## Models
 
-🤝 Contributing
-1. Fork the repo
-2. Create a feature branch (git checkout -b feature-name)
-3. Commit your changes
-4. Push to origin
-5. Create a Pull Request
+The `backend/models/` directory holds the trained model files used at runtime:
 
-🆘 Support
-For bugs, questions, or feedback, please open an issue.
+| File | Purpose |
+|------|---------|
+| `brain_tumor_model.pth` | PyTorch CNN — 4-class brain MRI classification |
+| `skin_lesions_model.pth` | PyTorch CNN — binary skin lesion classification |
+| `chronic_model.pkl` | scikit-learn — diabetes risk |
+| `chronic_multi_model.pkl` | scikit-learn — multi-condition chronic risk |
+| `s2d_Random_model.pkl` | Random Forest — symptom-to-disease |
+| `s2d_tfidf_vectorizer.pkl` | TF-IDF vectorizer for symptom text |
+| `s2d_label_encoder.pkl` | Label encoder for disease names |
 
+## Notes
+
+This was built as a hackathon-style prototype. It's a working full-stack demo, not a regulatory-grade clinical tool — none of the models are FDA/CE certified and outputs should not be used for diagnosis.
