@@ -1,11 +1,12 @@
 flask
-wekzeug
-flask_cors
+werkzeug
+flask-cors
+python-dotenv
 nltk
 requests
 google-generativeai
 torch
-torch
+torchvision
 pillow
 joblib
 pandas

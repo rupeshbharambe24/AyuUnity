@@ -1,5 +1,12 @@
 # AyuUnity
 
+![Next.js](https://img.shields.io/badge/Next.js-frontend-000000?logo=nextdotjs&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-backend-000000?logo=flask&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-CNNs-EE4C2C?logo=pytorch&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-models-F7931E?logo=scikitlearn&logoColor=white)
+![Status](https://img.shields.io/badge/status-prototype-orange)
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+
 A full-stack health-tech web application that combines medical-image analysis, chronic-disease risk prediction, symptom checking, and an LLM-backed assistant in a single dashboard. Built with **Next.js (frontend)** and **Flask (backend)**.
 
 ## What it does
@@ -40,14 +47,16 @@ AyuUnity/
 │   │   ├── model_loader.py         # PyTorch CNNs + sklearn loaders
 │   │   └── gemini_integration.py   # Gemini wrapper
 │   ├── models/                     # Trained .pth and .pkl models
-│   ├── uploads/                    # Runtime upload folder
+│   ├── uploads/                    # Runtime upload folder (contents gitignored)
 │   ├── requirements.txt
 │   └── .env.example
-└── frontend/
-    ├── app/                        # Next.js App Router pages
-    ├── components/                 # Domain components + shadcn UI
-    ├── public/, styles/, lib/, hooks/
-    └── package.json
+├── frontend/
+│   ├── app/                        # Next.js App Router pages
+│   ├── components/                 # Domain components + shadcn UI
+│   ├── public/, styles/, lib/, hooks/
+│   ├── package.json
+│   └── .env.example                # NEXT_PUBLIC_SOCKET_URL for the video-call component
+└── LICENSE
 ```
 
 ## Setup
@@ -73,6 +82,7 @@ Backend runs at `http://localhost:5000`.
 ```bash
 cd frontend
 npm install                       # or pnpm install
+cp .env.example .env.local        # optional: NEXT_PUBLIC_SOCKET_URL
 npm run dev
 ```
 
@@ -95,3 +105,15 @@ The `backend/models/` directory holds the trained model files used at runtime:
 ## Notes
 
 This was built as a hackathon-style prototype. It's a working full-stack demo, not a regulatory-grade clinical tool — none of the models are FDA/CE certified and outputs should not be used for diagnosis.
+
+## Related repositories
+
+| Repository | Description |
+|------------|-------------|
+| **AyuUnity** (this repo) | Full-stack app: Flask ML backend (image classification, chronic risk, symptom checker) + Next.js frontend |
+| [ayuunity-calm-care](https://github.com/rupeshbharambe24/ayuunity-calm-care) | UI prototype: React + Vite PWA for patient-held records, appointments, pharmacy, labs and emergency info, on a mock API |
+
+## License
+
+Code is released under the [MIT License](LICENSE). The bundled model weights were trained on third-party medical
+datasets; check those datasets' terms before reusing the weights.
